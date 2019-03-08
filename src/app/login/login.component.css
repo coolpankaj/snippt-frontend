@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+
+
+div.view{
+    background: black;
+    height: 100vh;
+    width: 100vw;
+}
+
+div.box {
+    color: white;
+    margin-top: 7%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    text-align: center;
+}
+
+p#login-header:hover{
+    color: green;
+}
+
+input#text-field{
+    background-color: transparent;
+    border-radius: 25px;
+    color: white;
+    border: transparent !important;
+    border: 1px solid rgb(59, 59, 110) !important;
+    font-size: 27px;
+    outline: none;  
+    
+}
+input#text-field:focus {
+    border: 1px solid green !important;
+}
+button#login {
+    font-size: 20px;
+    margin-top: 3%;
+    border-radius: 25px;
+}
+
