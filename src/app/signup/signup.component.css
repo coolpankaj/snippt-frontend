@@ -1,0 +1,16 @@
+
+div.row{
+    color: white;
+    background: url(./../../assets/black.png);
+    background-attachment: fixed;
+    background-size: cover;
+   
+    
+}
+div.box {
+    height: 100vh;
+   
+}
+input{
+    color: black !important;
+}

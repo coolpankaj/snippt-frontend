@@ -20,7 +20,7 @@ p#login-header:hover{
     color: green;
 }
 
-input#text-field{
+input.text-field{
     background-color: transparent;
     border-radius: 25px;
     color: white;
@@ -30,7 +30,7 @@ input#text-field{
     outline: none;  
     
 }
-input#text-field:focus {
+input.text-field:focus {
     border: 1px solid green !important;
 }
 button#login {

@@ -1,11 +1,14 @@
 <div class="row view">
-  <div class="col-md-4 offset-md-4 col-sm-6 offset-sm-3 box" style="border: 1px solid white">
+  <div class="col-md-4 offset-md-4 col-sm-6 offset-sm-3 box">
           <p id="login-header">Login</p>
-          <input class="form-control" type="text" id="text-field" placeholder="username"><br>
-          <input class="form-control" type="text" id="text-field" placeholder="password">
-          <button id="login" type="button" class="btn btn-outline-primary">Login</button><br><br>
+          <form>
+          <input class="form-control" type="text" class="text-field" [(ngModel)]="userName" name="userName" placeholder="username" required><br><br>
+          
+          <input class="form-control" type="password" class="text-field" (keypress)="onKeyDown($event)" [(ngModel)]="password" name="password" placeholder="password" required>
+          <button id="login" type="button" class="btn btn-outline-primary"  (click)="signinFunction()" >Login</button><br><br>
+          </form>
 
-          <button id="signUp" type="button" class="btn btn-outline-info float-right">Sign up</button>
+          <button id="signUp" type="button" class="btn btn-outline-info float-right" [routerLink]="['/signup']">Sign up</button>
 
   </div>
 </div>
