@@ -39,9 +39,9 @@ export class LoginComponent implements OnInit {
         userName: this.userName,
         password: this.password
       };
-      this.appService.signinFunction(data).subscribe((apiResponse) => {
+      this.appService.signinFunction(data).subscribe((apiResponse: any) => {
         if (apiResponse.status === 200) {
-          this.cookie.set('authtoken', apiResponse.data.authToken);
+          this.cookie.set('authToken', apiResponse.data.authToken);
           this.cookie.set('receiverId', apiResponse.data.userDetails.userId);
           this.cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
           this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails);

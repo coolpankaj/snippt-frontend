@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { CookieService } from 'ngx-cookie-service';
 import { AppService } from './../app.service';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 const colors: any = {
   red: {
@@ -30,6 +31,9 @@ export class UserDashboardComponent implements OnInit {
   @ViewChild('createNewMeeting') createNewMeeting: TemplateRef<any>;
   meetingDate: any;
   isDisabled = true;
+  meetingStartTime: any;
+  meetingEndTime: any;
+  meetings: any;
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
@@ -59,46 +63,7 @@ export class UserDashboardComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen = true;
   authToken: any;
@@ -106,7 +71,7 @@ export class UserDashboardComponent implements OnInit {
   receiverId: any;
   receiverName: any;
 
-  constructor(private modal: NgbModal, public Cookie: CookieService, public appService: AppService) {}
+  constructor(public toastr: ToastrManager,private modal: NgbModal, public Cookie: CookieService, public appService: AppService) {}
 
   ngOnInit() {
 
@@ -115,6 +80,7 @@ export class UserDashboardComponent implements OnInit {
     this.receiverId = this.Cookie.get('receiverId');
     this.receiverName = this.Cookie.get('receiverName');
     this.userInfo = this.appService.getUserInfoFromLocalStorage();
+    this.getMyMeetings()
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -147,6 +113,35 @@ export class UserDashboardComponent implements OnInit {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
+    getMyMeetings() {
+      const data = {
+        userId: this.userInfo.userId,
+        authToken: this.authToken
+      }
+      this.appService.getUserMeeting(data).subscribe((apiResponse: any) =>{
+        if (apiResponse.status === 200) {
+          this.meetings='';
+          this.events = [];
+          this.meetings = apiResponse.data;
+         // this.events = apiResponse.data;
+          //console.log(this.meetings)
+          for (let meetingEvent of this.meetings) {
+              meetingEvent.start = new Date(meetingEvent.meetingDate)
+             // meetingEvent.end = new Date(meetingEvent.meetingDate)
+              this.events.push(meetingEvent)
+            
+          }
+          console.log(this.events)
+          this.refresh.next()
+         // this.toastr.infoToastr('Calendar updated')
+        } else {
+          this.toastr.errorToastr(apiResponse.message)
+        }
+      }, (err) => {
+        this.toastr.errorToastr(err.message)
+      })
+    }
+
   addEvent(): void {
     this.events.push({
       title: 'New event',
@@ -175,14 +170,45 @@ export class UserDashboardComponent implements OnInit {
     const newmeetingDate = new Date(this.meetingDate);
     const diff = new Date(newmeetingDate.getTime() - today.getTime());
     const gap = diff.getUTCDate();
-    if (gap <= 7) {
-      return false;
-    } else {
+    if (gap > 7) {
       return true;
+    } else {
+      return false;
     }
   }
 
   createMeeting() {
     this.modal.open(this.createNewMeeting, { size: 'lg' });
+    this.meetingDate= '';
+    this.meetingStartTime= '';
+    this.meetingEndTime = '';
+  }
+  setMeetingTime(startTime, endTime) {
+      this.meetingStartTime = startTime;
+      this.meetingEndTime = endTime;
+      this.isDisabled = false;
+  }
+
+  addNewMeeting() {
+    const data = {
+      studentId: this.userInfo.userId,
+      studentName: this.userInfo.firstName,
+      meetingDate: this.meetingDate,
+      meetingStartTime: this.meetingStartTime,
+      meetingEndTime: this.meetingEndTime,
+      authToken: this.authToken
+    };
+    console.log(data);
+    this.appService.addNewMeeting(data).subscribe((apiResponse: any) => {
+      if(apiResponse.status === 200) {
+       // console.log(apiResponse)
+        this.toastr.successToastr(apiResponse.message)
+        this.getMyMeetings()
+      } else {
+        this.toastr.errorToastr(apiResponse.message)
+      }
+    }, (err) => {
+      this.toastr.errorToastr(`${err.message}`)
+    })
   }
 }

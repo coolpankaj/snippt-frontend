@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-md-12">
+
+  <div class="col-md-12 border">
     <ng-template #modalContent let-close="close">
       <div class="modal-header">
         <h5 class="modal-title">Event action occurred</h5>
@@ -23,54 +23,54 @@
         </button>
       </div>
     </ng-template>
-
-    <div class="row text-center">
-      <div class="col-md-4">
-        <div class="btn-group">
-          <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
-            Previous
-          </div>
-          <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
-            Today
-          </div>
-          <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
-            Next
-          </div>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Previous
         </div>
-      </div>
-      <div class="col-md-4">
-        <h3>{{ viewDate | calendarDate: view + "ViewTitle":"en" }}</h3>
-      </div>
-      <div class="col-md-4">
-        <div class="btn-group">
-          <div class="btn btn-primary" (click)="view = CalendarView.Month" [class.active]="view === CalendarView.Month">
-            Month
-          </div>
-          <div class="btn btn-primary" (click)="view = CalendarView.Week" [class.active]="view === CalendarView.Week">
-            Week
-          </div>
-          <div class="btn btn-primary" (click)="view = CalendarView.Day" [class.active]="view === CalendarView.Day">
-            Day
-          </div>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+          Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Next
         </div>
       </div>
     </div>
-    <br />
-    <div [ngSwitch]="view">
-      <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-        [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
-        (eventTimesChanged)="eventTimesChanged($event)">
-      </mwl-calendar-month-view>
-      <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-        (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
-      </mwl-calendar-week-view>
-      <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-        (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
-      </mwl-calendar-day-view>
+    <div class="col-md-4">
+      <h3>{{ viewDate | calendarDate: view + "ViewTitle":"en" }}</h3>
     </div>
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" (click)="view = CalendarView.Month" [class.active]="view === CalendarView.Month">
+          Month
+        </div>
+        <div class="btn btn-primary" (click)="view = CalendarView.Week" [class.active]="view === CalendarView.Week">
+          Week
+        </div>
+        <div class="btn btn-primary" (click)="view = CalendarView.Day" [class.active]="view === CalendarView.Day">
+          Day
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div [ngSwitch]="view" style="border:1px solid blue">
+    <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
+      (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-day-view>
+  </div>
+   
 
   </div>
-</div>
+
 
 
 <div class="fixed-bottom">
@@ -86,7 +86,7 @@
 
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Book Meeting</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -104,11 +104,46 @@
           **You can book meeting slot only 7 days before.
         </div><br>
         <label for="timeSlot">Time Slot</label>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">start time</th>
+                  <th scope="col">end time</th>
+                  <th scope="col">Handle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>1 pm</td>
+                  <td>2 pm</td>
+                  <td><button type="button" class="btn btn-outline-success" (click)="setMeetingTime(1,2)">Book</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>4 pm</td>
+                  <td>5 pm</td>
+                  <td><button type="button" class="btn btn-outline-success" (click)="setMeetingTime(4,5)">Book</button></td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>6 pm</td>
+                  <td>7 pm</td>
+                  <td><button type="button" class="btn btn-outline-success" (click)="setMeetingTime(6,7)">Book</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <p *ngIf="meetingStartTime && meetingEndTime">Your selected slot : <b>start time:</b> {{meetingStartTime}}pm,   <b>end time:</b> {{meetingEndTime}}pm</p>
+          </div>
+        </div>
       </div>
       
 
       <div class="modal-footer">
-        <button type="button" [disabled]= "isDisabled" class="btn btn-primary">Add Meeting</button>
+        <button type="button" [disabled]= "isDisabled" class="btn btn-primary" (click)="addNewMeeting();close()">Add Meeting</button>
       </div>
     </div>
  
