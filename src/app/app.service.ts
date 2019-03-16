@@ -24,7 +24,7 @@ export class AppService {
       .set('userName', data.userName)
       .set('password', data.password)
       .set('email', data.email)
-      .set('isAdmin', data.isAdmin);
+      .set('isAlumni', data.isAlumni);
     return this.http.post(`${this.baseUrl}/users/signup`, params);
   }
   signinFunction(data: any) {
@@ -33,10 +33,10 @@ export class AppService {
       .set('password', data.password);
     return this.http.post(`${this.baseUrl}/users/login`, params);
   }
-  public logout() {
+  public logout(data: any) {
     const params = new HttpParams()
-      .set('authToken', this.cookie.get('authtoken'));
-    return this.http.post(`${this.baseUrl}/users/logout`, params);
+      .set('authToken', data.authToken);
+    return this.http.post(`${this.baseUrl}/users/${data.userId}/logout`, params);
   }
 
   getUserMeeting(data: any): Observable<any> {
@@ -52,5 +52,24 @@ export class AppService {
      .set('meetingEndTime', data.meetingEndTime)
      .set('authToken', data.authToken)
     return this.http.post(`${this.baseUrl}/meetings/addMeeting`, params);
+  }
+  checkPendingMeetings(authToken: any): Observable<any> {
+    return this.http.get(`${this.baseUrl}/meetings/check/pending/meetings?authToken=${authToken}`)
+  }
+
+  listAllMeetings(authToken: any): Observable<any> {
+    return this.http.get(`${this.baseUrl}/meetings/get/all/meetings?authToken=${authToken}`)
+  }
+
+  updateMeeting(data: any) {
+    const params = new HttpParams()
+    .set('authToken', data.authToken)
+    .set('isAccepted', data.isAccepted)
+    return this.http.put(`${this.baseUrl}/meetings/${data.meetingId}/updateMeeting`, params)
+  }
+  deleteMeeting(data: any) {
+    const params = new HttpParams()
+    .set('authToken', data.authToken)
+      return this.http.post(`${this.baseUrl}/meetings/${data.meetingId}/delete`, params)
   }
 }

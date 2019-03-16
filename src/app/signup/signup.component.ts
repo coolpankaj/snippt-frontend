@@ -22,7 +22,7 @@ export class SignupComponent implements OnInit {
     email: [null, Validators.compose([Validators.required, Validators.email])],
     password: [null, Validators.required],
     userName: ['', Validators.required],
-    isAdmin: [false]
+    isAlumni: [false]
   });
 
   ngOnInit() {}

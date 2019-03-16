@@ -47,11 +47,11 @@
                         <input type="text" id="userName" class="form-control" formControlName="userName">
                       </label>
                       <div class="alert text" style="color:white" *ngIf="!signupForm.controls['userName'].valid && signupForm.controls['userName'].touched">*This is required</div>
-                      <div *ngIf="adminError">admin is required</div>
+                      
                     </div>
                     <div class="col-md-6 text-center">
-                        <label for="isAdmin">
-                          <input type="checkbox"  name="isAdmin" id="isAdmin" formControlName="isAdmin"><span style="padding-left:10px"> As Admin</span>
+                        <label for="isAlumni">
+                          <input type="checkbox"  name="isAlumni" id="isAlumni" formControlName="isAlumni"><span style="padding-left:10px"> As Alumni</span>
                         </label>
                       </div>
                   </div><br>

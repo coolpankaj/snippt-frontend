@@ -47,9 +47,9 @@ export class LoginComponent implements OnInit {
           this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails);
          // this.router.navigate(['/chat']);
           this.toastr.successToastr(apiResponse.message);
-          if (apiResponse.data.userDetails.isAdmin === true) {
+          if (apiResponse.data.userDetails.isAlumni === true) {
             setTimeout(() => {
-             this.router.navigate(['/admin-dashboard']);
+             this.router.navigate(['/alumni-dashboard']);
             }, 1500);
            } else {
             setTimeout(() => {

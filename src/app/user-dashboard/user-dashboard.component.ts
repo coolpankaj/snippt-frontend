@@ -6,6 +6,7 @@ import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, Cal
 import { CookieService } from 'ngx-cookie-service';
 import { AppService } from './../app.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import { Router } from '@angular/router';
 
 const colors: any = {
   red: {
@@ -34,6 +35,7 @@ export class UserDashboardComponent implements OnInit {
   meetingStartTime: any;
   meetingEndTime: any;
   meetings: any;
+  isPendingMeeting = false;
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
@@ -65,13 +67,13 @@ export class UserDashboardComponent implements OnInit {
 
   events: CalendarEvent[] = [];
 
-  activeDayIsOpen = true;
+  activeDayIsOpen = false;
   authToken: any;
   userInfo: any;
   receiverId: any;
   receiverName: any;
 
-  constructor(public toastr: ToastrManager,private modal: NgbModal, public Cookie: CookieService, public appService: AppService) {}
+  constructor(public router: Router, public toastr: ToastrManager,private modal: NgbModal, public Cookie: CookieService, public appService: AppService) {}
 
   ngOnInit() {
 
@@ -81,9 +83,10 @@ export class UserDashboardComponent implements OnInit {
     this.receiverName = this.Cookie.get('receiverName');
     this.userInfo = this.appService.getUserInfoFromLocalStorage();
     this.getMyMeetings()
+    this.getPendingMeetings()
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+/*   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       this.viewDate = date;
       if (
@@ -95,7 +98,7 @@ export class UserDashboardComponent implements OnInit {
         this.activeDayIsOpen = true;
       }
     }
-  }
+  } */
 
   eventTimesChanged({
     event,
@@ -127,11 +130,10 @@ export class UserDashboardComponent implements OnInit {
           //console.log(this.meetings)
           for (let meetingEvent of this.meetings) {
               meetingEvent.start = new Date(meetingEvent.meetingDate)
-             // meetingEvent.end = new Date(meetingEvent.meetingDate)
+              meetingEvent.end = new Date(meetingEvent.meetingDate)
               this.events.push(meetingEvent)
-            
           }
-          console.log(this.events)
+        //  console.log(this.events)
           this.refresh.next()
          // this.toastr.infoToastr('Calendar updated')
         } else {
@@ -178,10 +180,15 @@ export class UserDashboardComponent implements OnInit {
   }
 
   createMeeting() {
+    if(this.isPendingMeeting == true) {
+      this.toastr.warningToastr('There are some pending meetings')
+      return false
+    }
     this.modal.open(this.createNewMeeting, { size: 'lg' });
     this.meetingDate= '';
     this.meetingStartTime= '';
     this.meetingEndTime = '';
+    
   }
   setMeetingTime(startTime, endTime) {
       this.meetingStartTime = startTime;
@@ -210,5 +217,45 @@ export class UserDashboardComponent implements OnInit {
     }, (err) => {
       this.toastr.errorToastr(`${err.message}`)
     })
+  }
+
+  getPendingMeetings() {
+    this.appService.checkPendingMeetings(this.authToken).subscribe((apiResponse: any) => {
+      if( apiResponse.data == null) {
+        this.isPendingMeeting = false
+      } else {
+        this.isPendingMeeting= true
+      }
+    }, (err) => {
+      this.toastr.errorToastr(err.message)
+    })
+  }
+
+ logOut = () => {
+    let data = {
+      userId: this.receiverId,
+      authToken: this.authToken
+    }
+    this.appService.logout(data).subscribe((apiResponse: any) => {
+        if (apiResponse.status === 200) {
+          
+          this.Cookie.delete('authToken');//delete all the cookies
+          this.Cookie.delete('receiverId');
+          this.Cookie.delete('receiverName');
+          
+          localStorage.clear();
+          
+           
+          this.toastr.successToastr("Logged out")
+            this.router.navigate(['/login']);           
+
+        } else {
+          this.toastr.errorToastr(apiResponse.message)
+        }
+      },
+      (err) => {
+        this.toastr.errorToastr(err.message)
+      });
+
   }
 }

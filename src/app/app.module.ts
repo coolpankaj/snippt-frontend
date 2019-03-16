@@ -17,16 +17,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { AlumniDashboardComponent } from './alumni-dashboard/alumni-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     SignupComponent,
-    AdminDashboardComponent,
-    UserDashboardComponent
+    UserDashboardComponent,
+    AlumniDashboardComponent
   ],
   imports: [
     BrowserModule,

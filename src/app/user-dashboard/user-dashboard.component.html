@@ -2,20 +2,55 @@
   <div class="col-md-12 border">
     <ng-template #modalContent let-close="close">
       <div class="modal-header">
-        <h5 class="modal-title">Event action occurred</h5>
+        <h5 class="modal-title">Meeting Details</h5>
         <button type="button" class="close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div>
+        <!-- <div>
           Action:
           <pre>{{ modalData?.action }}</pre>
-        </div>
+        </div> 
         <div>
           Event:
           <pre>{{ modalData?.event | json }}</pre>
-        </div>
+        </div> -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Description</th>              
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Meeting ID</th>
+              <td>{{modalData?.event.meetingId}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Student Name</th>
+              <td>{{modalData?.event.studentName}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Meeting Date</th>
+              <td>{{modalData?.event.meetingDate}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Meeting Start Time</th>
+              <td>{{modalData?.event.meetingStartTime}} PM</td>
+            </tr>
+            <tr>
+              <th scope="row">Meeting End Time</th>
+              <td>{{modalData?.event.meetingEndTime}} PM</td>
+            </tr>
+            <tr>
+              <th scope="row">Status</th>
+              <td *ngIf="modalData?.event.isAccepted == true " style="color:green">Accepted</td>
+              <td *ngIf="modalData?.event.isAccepted == false " style="color:red">Pending</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="close()">
@@ -40,8 +75,8 @@
     <div class="col-md-4">
       <h3>{{ viewDate | calendarDate: view + "ViewTitle":"en" }}</h3>
     </div>
-    <div class="col-md-4">
-      <div class="btn-group">
+   <div class="col-md-4">
+     <!--  <div class="btn-group">
         <div class="btn btn-primary" (click)="view = CalendarView.Month" [class.active]="view === CalendarView.Month">
           Month
         </div>
@@ -51,13 +86,14 @@
         <div class="btn btn-primary" (click)="view = CalendarView.Day" [class.active]="view === CalendarView.Day">
           Day
         </div>
-      </div>
+      </div> -->
+      <button class="btn btn-primary" (click)="logOut()">Logout</button>
     </div>
   </div>
   <br />
   <div [ngSwitch]="view" style="border:1px solid blue">
     <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
-      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
+      [activeDayIsOpen]="activeDayIsOpen"  (eventClicked)="handleEvent('Clicked', $event.event)"
       (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
